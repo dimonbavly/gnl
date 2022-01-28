@@ -41,8 +41,13 @@ char *update_remaider(char *local_start, char *result) {
 
 	if (local_start)
 	{
-		remainder = malloc(sizeof (char) * (ft_strlen(remainder) + ft_strlen(local_start) + 1 -
+        if (ft_strlen(remainder) + ft_strlen(local_start) + 1 > ft_strlen(result))
+            remainder = malloc(sizeof (char) * (ft_strlen(remainder) + ft_strlen(local_start) + 1 -
                 ft_strlen((result))));
+        else{
+            free(tmp);
+            return (NULL);
+        }
 		for (int i = 0; i < (int)(ft_strlen(tmp) + ft_strlen(local_start) + 1 - ft_strlen(result)); i++)
         {
             if (i < (int)ft_strlen(result))
