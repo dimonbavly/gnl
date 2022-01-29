@@ -5,7 +5,7 @@
 #ifndef GNL_GET_NEXT_LINE_H
 #define GNL_GET_NEXT_LINE_H
 
-#include "libft.h"
+//#include "libft.h"
 
 #define BS 0
 #define BM 1
