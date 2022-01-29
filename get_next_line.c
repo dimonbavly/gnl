@@ -10,55 +10,58 @@ char    *gnl_chr(char *s, char c);
 
 ssize_t gnl_read(char **remainder, char *src, int fd);
 
-char *gnl_slice(char **remainder, char *src, int end, int depth);
+char *gnl_slice(char **remainder, int start, int end, int depth);
 
 char    *get_next_line(int fd)
 {
-    static char *remainder;
-	char **src;
+	static char *remainder;
+    char *src;
     ssize_t ret;
 
-    src = &remainder;
 	if (fd >= 0 && BUFFER_SIZE > 0)
     {
-        while (!gnl_chr(remainder,'\n')){
-            ret = gnl_read(&remainder, *src, fd);
+        while (!gnl_chr(src, '\n')){
+            ret = gnl_read(&src, src, fd);
+
             if (ret < 0)
                 return (NULL);
             else if (ret == 0)
-                return (gnl_slice(&remainder, *src,
-								  (int) (gnl_chr(remainder, '\0') - remainder),
-								  0));
+			{
+				remainder = src;
+				return (gnl_slice(&src, 0,
+								   (int) (gnl_chr(src, '\0') - src),
+								   0));
+			}
         }
-        return (gnl_slice(&remainder,
-						  remainder,
-						  (int) (gnl_chr(remainder, '\n') - remainder), 0));
+		remainder = src;
+		if (remainder)
+			ret = 0;
+		return (gnl_slice(&src, 0,
+						  (int) (gnl_chr(src, '\n') - src), 0));
     }
     return (NULL);//
 }
 
-char *gnl_slice(char **remainder, char *src, int end, int depth) {
+char *gnl_slice(char **remainder, int start, int end, int depth) {
     char *result;
 	char *tmp;
-    int i;
-	size_t len;
+	size_t len = ft_strlen(remainder[start]);
 
-	len = gnl_chr(src, '\0') - src;
 	tmp = *remainder;
-	if (len > 0) {
-		result = malloc(sizeof(char) * ((end + 1 + 1)));
-		i = -1;
-		while (++i < end + 1 + 1)
-			result[i] = src[i];
-		result[i] = '\0';
+	if (*remainder[end] == '\0'  && len > 0) {
+		result = malloc (sizeof(char) * (end - start + 1));
+		ft_memcpy(result, &*remainder[start], end - start + 1);
 	}
-	if (src[end] != '\0')
-		src = &src[i];
-	*remainder = gnl_slice(&src, tmp,(int) (gnl_chr(tmp, '\0') - tmp),++depth);
-	if (depth == 0){
-			free(tmp);
-			tmp = NULL;
-		}
+	else if (*remainder[end] == '\n' && len > 0 && depth == 0)
+	{
+		result = malloc(sizeof (char) * (end - start + 2));
+		ft_memcpy(result, &*remainder[start], end - start + 2);
+		len = ft_strlen(&*remainder[end + 1]);
+		tmp = gnl_slice(remainder, end + 1, (int)len, depth + 1);
+	}
+	if (depth == 0)
+		free(*remainder);
+	*remainder = tmp;
 	return ((char *)((size_t)result * (len > 0)));
 }
 
@@ -67,25 +70,28 @@ ssize_t gnl_read(char **remainder, char *src, int fd) {
 	char *tmp;
 	ssize_t ret;
 	int i;
-	size_t len;
+	size_t len = ft_strlen(src);
 
-	len = gnl_chr(src, '\0') - src;
 	ret = read(fd, buf, BUFFER_SIZE);
 	if (ret <= 0)
 		return (ret);
-	tmp = malloc(sizeof(char) * (len * (len > 0) + ret + 1));
-	i = -1;
-	while (++i < (int)(len * (len > 0) + ret + 1))
+	if (len + ret > 0)
+		tmp = malloc(sizeof(char) *(len + ret + 1));
+	i = 0;
+	while (i < (int)(len + ret))
 	{
-		if (i < (int)(len * (len > 0)))
+		if (i < (int)len)
 			tmp[i] = src[i];
 		else
-			tmp[i] = buf[i - (int)((len) * (len > 0))];
+			tmp[i] = buf[i - len];
+		i++;
 	}
 	tmp[i] = '\0';
 	free(*remainder);
 	*remainder = tmp;
-    return (ret);
+	return (ret);
+
+
 }
 
 
