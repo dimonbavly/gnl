@@ -1,115 +1,103 @@
-#include <stdio.h>
+//
+// Created by srupert on 1/28/22.
+//
+
+#include <malloc.h>
+#include <unistd.h>
 #include "get_next_line.h"
 
-char *eol(char *str, size_t len);
+char    *gnl_chr(char *s, char c);
 
-size_t ft_strlen(char *str);
+ssize_t gnl_read(char **remainder, char *src, int fd);
 
-char *gnl(char *endline, char *rem, char *buf);
+char *gnl_slice(char **remainder, char *src, int end, int depth);
 
-char *update_remaider(char *local_start, char *result);
-
-char	*get_next_line(int fd)
+char    *get_next_line(int fd)
 {
-	char *endline;
-	char buf[BUFFER_SIZE + 1];
-	char *rem;
+    static char *remainder;
+	char **src;
+    ssize_t ret;
 
-	if (fd >= 0 && BUFFER_SIZE > 0) {
-		rem = update_remaider(NULL, NULL);
-		if (rem) {
-			if ((endline = eol(rem, ft_strlen(rem))) != NULL)
-				return (gnl(endline, rem, NULL));
-			}
-		}
-	while (1) {
-		ssize_t ret;
-
-		if ((ret = read(fd, buf, BUFFER_SIZE)) <= 0)
-			return (NULL);
-		buf[ret] = '\0';
-		if ((endline = eol(buf, BUFFER_SIZE)) != NULL)
-			return (gnl(endline, rem, buf));
-		rem = update_remaider(buf, NULL);
-	}
-	return (NULL);
-}
-
-char *update_remaider(char *local_start, char *result) {
-	static char *remainder;
-    char *tmp = remainder;
-
-	if (local_start)
-	{
-        if (ft_strlen(remainder) + ft_strlen(local_start) + 1 > ft_strlen(result))
-            remainder = malloc(sizeof (char) * (ft_strlen(remainder) + ft_strlen(local_start) + 1 -
-                ft_strlen((result))));
-        else{
-            free(tmp);
-            return (NULL);
+    src = &remainder;
+	if (fd >= 0 && BUFFER_SIZE > 0)
+    {
+        while (!gnl_chr(remainder,'\n')){
+            ret = gnl_read(&remainder, *src, fd);
+            if (ret < 0)
+                return (NULL);
+            else if (ret == 0)
+                return (gnl_slice(&remainder, *src,
+								  (int) (gnl_chr(remainder, '\0') - remainder),
+								  0));
         }
-		for (int i = 0; i < (int)(ft_strlen(tmp) + ft_strlen(local_start) + 1 - ft_strlen(result)); i++)
-        {
-            if (i < (int)ft_strlen(result))
-                continue ;
-            if (i < (int)ft_strlen(tmp))
-                remainder[i] = tmp[i];
-            else
-                remainder[i] = local_start[i - (int)ft_strlen(tmp)];
-        }
-        if (tmp != NULL) // fix buf = 1 , 41- no - nl
-            free(tmp);
-	}
-	return (remainder);
+        return (gnl_slice(&remainder,
+						  remainder,
+						  (int) (gnl_chr(remainder, '\n') - remainder), 0));
+    }
+    return (NULL);//
 }
 
-char *gnl(char *endline, char *rem, char *buf) {
-	char *result;
-	if (rem != NULL && endline >= rem && endline <= &(rem[ft_strlen(rem) - 1]))
-	{
-		result = malloc(sizeof(char) * (endline - rem + 1 + 1));
-		for (int i = 0; i < endline - rem + 1; i++)
-			result[i] = rem[i];
-		result[endline - rem + 1] = '\0';
-	}
-	else {
-		result = malloc(sizeof(char) * (ft_strlen(rem) + (endline - buf + 1 + 1)));
-		int i = 0;
-		while( i < (int)(ft_strlen(rem) + (endline - buf + 1)))
-		{
-			if (i < (int)ft_strlen(rem))
-				result[i] = rem[i];
-			else
-                result[i] = buf[i - ft_strlen(rem)];
-			i++;
-		}
-		result[i] = '\0'; // todo !
-		}
-    update_remaider(&endline[1], result);
-	return (result);
-}
-
-size_t ft_strlen(char *str) {
+char *gnl_slice(char **remainder, char *src, int end, int depth) {
+    char *result;
+	char *tmp;
+    int i;
 	size_t len;
 
-	if (str == NULL)
-		return (0);
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
+	len = gnl_chr(src, '\0') - src;
+	tmp = *remainder;
+	if (len > 0) {
+		result = malloc(sizeof(char) * ((end + 1 + 1)));
+		i = -1;
+		while (++i < end + 1 + 1)
+			result[i] = src[i];
+		result[i] = '\0';
+	}
+	if (src[end] != '\0')
+		src = &src[i];
+	*remainder = gnl_slice(&src, tmp,(int) (gnl_chr(tmp, '\0') - tmp),++depth);
+	if (depth == 0){
+			free(tmp);
+			tmp = NULL;
+		}
+	return ((char *)((size_t)result * (len > 0)));
 }
 
-char *eol(char *str, size_t len)
-{
-	size_t i = 0;
-	if (str != NULL) {
-		while (i < len)
-		{
-			if (str[i] == '\n' || str[i] == '\0')
-				return (&str[i]);
-			i++;
-		}
+ssize_t gnl_read(char **remainder, char *src, int fd) {
+	char buf[BUFFER_SIZE + 1];
+	char *tmp;
+	ssize_t ret;
+	int i;
+	size_t len;
+
+	len = gnl_chr(src, '\0') - src;
+	ret = read(fd, buf, BUFFER_SIZE);
+	if (ret <= 0)
+		return (ret);
+	tmp = malloc(sizeof(char) * (len * (len > 0) + ret + 1));
+	i = -1;
+	while (++i < (int)(len * (len > 0) + ret + 1))
+	{
+		if (i < (int)(len * (len > 0)))
+			tmp[i] = src[i];
+		else
+			tmp[i] = buf[i - (int)((len) * (len > 0))];
 	}
-	return (NULL);
+	tmp[i] = '\0';
+	free(*remainder);
+	*remainder = tmp;
+    return (ret);
+}
+
+
+char    *gnl_chr(char *s, char c) // char ** ???
+{
+    while (s)
+    {
+        if (c != '\0' && *s == '\0')
+            break ;
+        if (*s == c)
+            return (s);
+        s++;
+    }
+    return (NULL);
 }

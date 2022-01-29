@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <malloc.h>
 
 int main()
 {
@@ -20,8 +21,7 @@ int main()
 		fflush(NULL);
 		printf("%s", s);
 		fflush(NULL);
-        if (s)
-            free(s);
+		free(s);
 	}
 	return (0);
 }
