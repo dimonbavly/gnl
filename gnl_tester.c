@@ -13,7 +13,7 @@ int main()
 {
 	int fd;
 	char *s;
-    char *file = "./gnlTester/files/"
+    char *file = "./files/"
                  "42_with_nl";
 	fd = open(file, O_RDONLY);
 	while ((s = get_next_line(fd)) != NULL)
