@@ -14,8 +14,9 @@ int main()
 	int fd;
 	char *s;
     char *file = "./files/"
-				 "alternate_line_nl_no_nl"
-//                 "42_with_nl"
+//				 "alternate_line_nl_no_nl"
+                 "42_with_nl"
+//                 "nl"
                  ;
 	fd = open(file, O_RDONLY);
 	while ((s = get_next_line(fd)) != NULL)
