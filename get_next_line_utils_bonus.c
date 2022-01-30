@@ -2,6 +2,7 @@
 // Created by srupert on 1/30/22.
 //
 #include "get_next_line_bonus.h"
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	cnt;
