@@ -1,11 +1,10 @@
 SAN = -fsanitize=address
-BONUS = _bonus
+BONUS =
+#_bonus
 
 all:
 	gcc  -g3 -std=c99 -O0 -D BUFFER_SIZE=42 -I. -Wall -Wextra -Werror \
  		gnl_tester.c get_next_line$(BONUS).c get_next_line_utils$(BONUS).c \
- 		-L. -lft \
- 		-I. \
  		-o gnl
 
 clean:
