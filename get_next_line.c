@@ -60,13 +60,14 @@ char	*gnl_slice(char *remainder, char **result)
 	len = ft_strlen(remainder);
 	end = gnl_chr(remainder, '\n');
 	len_res = ((end - remainder > 2) * (end - remainder + 1) + (end == remainder) + (len) * (end == NULL));
-	len_new_rem = (len - (end - remainder)) * (end && end[1] != '\0');
+	len_new_rem = len - len_res;
 	*result = malloc(sizeof (char) * (len_res + 1) * (len_res != 0));
 	ft_memcpy(*result, remainder, len_res);
 	(*result)[len_res] = '\0';
 	if(len_new_rem > 0)
 		new_rem = malloc(sizeof(char) * (len_new_rem + 1));
-	ft_memcpy(new_rem, remainder, (len_new_rem + 1));
+	if (end)
+		ft_memcpy(new_rem, &end[1], (len_new_rem + 1));
 	return (new_rem);
 }
 
