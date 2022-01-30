@@ -49,23 +49,24 @@ char	*get_next_line(int fd)
 char	*gnl_slice(char *remainder, char **result)
 {
 	char	*new_rem;
-	size_t	i;
+	size_t len;
+	char *end;
+	size_t len_res;
+	size_t len_new_rem;
 
-	i = 0;
-	new_rem = NULL;
-	while (remainder && remainder[i] != '\n' && remainder[i] != '\0')
-		i++;
-	if (i > 0 || (remainder != 0 && remainder[0] == '\n'))
-		*result = malloc(sizeof(char) * (i + 1 + (remainder[i] == '\n')));
-	if (ft_strlen(&(remainder[i])) > 1)
-		new_rem = malloc(sizeof (char) * (ft_strlen(&remainder[i]) + (i != 0)));
-	if (*result == NULL || (new_rem == NULL && ft_strlen(&remainder[i]) > 1))
+	if (remainder == NULL)
 		return (NULL);
-	ft_memcpy(*result, remainder, i + 1);
-	if (remainder[i] == '\n')
-		(*result)[i + 1] = '\0';
-	if (new_rem)
-		ft_memcpy(new_rem, &(remainder[i + 1]), ft_strlen(&(remainder[i + 1]) - (i==0)));
+	new_rem = NULL;
+	len = ft_strlen(remainder);
+	end = gnl_chr(remainder, '\n');
+	len_res = ((end - remainder > 2) * (end - remainder + 1) + (end == remainder) + (len) * (end == NULL));
+	len_new_rem = (len - (end - remainder)) * (end && end[1] != '\0');
+	*result = malloc(sizeof (char) * (len_res + 1) * (len_res != 0));
+	ft_memcpy(*result, remainder, len_res);
+	(*result)[len_res] = '\0';
+	if(len_new_rem > 0)
+		new_rem = malloc(sizeof(char) * (len_new_rem + 1));
+	ft_memcpy(new_rem, remainder, (len_new_rem + 1));
 	return (new_rem);
 }
 

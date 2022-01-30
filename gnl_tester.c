@@ -13,22 +13,23 @@ int main()
 	char *s1;
 //	char *s2;
     char *file1 = "./files/"
-				 "alternate_line_nl_no_nl"
-//               "41_with_nl"
-//               "nl"
-//				 "41_no_nl"
-//				 "multiple_nlx5"
-//			   	"empty"
-                 ;
-//	char *file2 = "./files/"
-////				 "alternate_line_nl_no_nl"
-////			     "41_with_nl"
-////               "nl"
-//				"alternate_line_nl_with_nl"
-////				 "41_no_nl"
-////				 "multiple_nlx5"
-////  	    	"empty"
-//  	    	;
+//				  "41_no_nl"
+				  "41_with_nl"
+//				  "42_no_nl"
+//				  "42_with_nl"
+//				  "43_no_nl"
+//				  "43_with_nl"
+//				  "alternate_line_nl_no_nl"
+//				  "alternate_line_nl_with_nl"
+//				  "big_line_no_nl"
+//				  "big_line_with_nl"
+//				  "empty"
+//				  "multiple_line_no_nl"
+//				  "multiple_line_with_nl"
+//				  "multiple_nlx5"
+//				  "nl"
+;
+
 	fd[0] = open(file1, O_RDONLY);
 //	fd[1] = open(file2, O_RDONLY);
 	s1 = NULL;
