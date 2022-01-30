@@ -2,7 +2,7 @@
 // Created by srupert on 1/30/22.
 //01234567890123456789012345678901234567890
 //0x604000000010 "0123456789012345678901234567890123456789\n0"
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char *gnl_read(char *remainder, int fd, ssize_t *ret);
 
@@ -10,9 +10,9 @@ char *gnl_slice(char *remainder, char **result);
 
 char *gnl_chr(char *s, char c);
 
-char    *get_next_line(int fd)
+char    *get_next_line_bonus(int fd)
 {
-	static char *remainder;
+	static char *remainder[ULIMIT_N];
 	char *result;
 	char *tmp;
 	ssize_t ret;
@@ -22,19 +22,19 @@ char    *get_next_line(int fd)
 		return (NULL);
 	while(1)
 	{
-		if (remainder)
-			if (gnl_chr(remainder, '\n'))
+		if (remainder[fd])
+			if (gnl_chr(remainder[fd], '\n'))
 				break ;
-		tmp = remainder;
-		remainder = gnl_read(remainder, fd, &ret);
+		tmp = remainder[fd];
+		remainder[fd] = gnl_read(remainder[fd], fd, &ret);
 		free(tmp);
 		if (ret < 0)
 			return (NULL);
 		if (ret == 0)
 			break ;
 	}
-	tmp = remainder;
-	remainder = gnl_slice(remainder, &result);
+	tmp = remainder[fd];
+	remainder[fd] = gnl_slice(remainder[fd], &result);
 	free(tmp);
 	return (result);
 }
