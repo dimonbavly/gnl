@@ -15,6 +15,7 @@
 
 # include <malloc.h>
 # include <unistd.h>
+# define ULIMIT_N 4096
 
 char	*get_next_line_bonus(int fd);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
