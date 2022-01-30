@@ -62,11 +62,11 @@ char	*gnl_slice(char *remainder, char **result)
 		new_rem = malloc(sizeof (char) * (ft_strlen(&remainder[i]) + 1));
 	if (*result == NULL || (new_rem == NULL && ft_strlen(&remainder[i]) > 1))
 		return (NULL);
-	memcpy(*result, remainder, i + 1);
+	ft_memcpy(*result, remainder, i + 1);
 	if (remainder[i] == '\n')
 		(*result)[i + 1] = '\0';
 	if (new_rem)
-		memcpy(new_rem, &(remainder[i + 1]), ft_strlen(&(remainder[i + 1])));
+		ft_memcpy(new_rem, &(remainder[i + 1]), ft_strlen(&(remainder[i + 1])));
 	return (new_rem);
 }
 
