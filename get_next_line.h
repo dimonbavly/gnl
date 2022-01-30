@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 char	*get_next_line(int fd);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
+void	*gnl_memcpy(void *dest, const void *src, size_t n);
 size_t	ft_strlen(const char *s);
 
 #endif //GET_NEXT_LINE_H
