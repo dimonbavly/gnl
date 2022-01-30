@@ -18,5 +18,7 @@
 #define OT 6
 
 char    *get_next_line(int fd);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+size_t	ft_strlen(const char *s);
 
 #endif //GNL_GET_NEXT_LINE_H
