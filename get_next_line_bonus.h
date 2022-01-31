@@ -13,7 +13,7 @@
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
 
-# include <malloc.h>
+# include <stdlib.h>
 # include <unistd.h>
 # define ULIMIT_N 4096
 
