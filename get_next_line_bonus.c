@@ -75,19 +75,27 @@ char	*gnl_slice(char *remainder, char **result)
 
 char	*gnl_read(char *remainder, int fd, ssize_t *ret)
 {
-	char	buf[BUFFER_SIZE + 1];
+	char	*buf;
 	char	*new_rem;
 
+	buf = malloc(sizeof(char) *(BUFFER_SIZE + 1));
 	*ret = read(fd, buf, BUFFER_SIZE);
 	if (*ret < 0 || (remainder == NULL && *ret == 0))
+	{
+		free(buf);
 		return (NULL);
+	}
 	new_rem = malloc((sizeof(char) * (ft_strlen(remainder) + *ret + 1)));
 	if (new_rem == NULL )
+	{
+		free(buf);
 		return (NULL);
+	}
 	if (ft_strlen(remainder) > 0)
 		gnl_memcpy(new_rem, remainder, ft_strlen(remainder));
 	gnl_memcpy(&(new_rem[ft_strlen(remainder)]), buf, *ret + 1);
 	new_rem[ft_strlen(remainder) + *ret - (remainder == 0 && *ret == 0)] = '\0';
+	free(buf);
 	return (new_rem);
 }
 
