@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: srupert <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: srupert <srupert@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/30 09:47:37 by srupert           #+#    #+#             */
-/*   Updated: 2022/01/30 09:47:42 by srupert          ###   ########.fr       */
+/*   Created: 2022/02/03 19:33:32 by srupert           #+#    #+#             */
+/*   Updated: 2022/02/03 19:33:35 by srupert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*gnl_slice(char *remainder, char **result);
 
 char	*gnl_chr(char *s, char c);
 
-char	*get_next_line_bonus(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*remainder[ULIMIT_N];
 	char		*result;
