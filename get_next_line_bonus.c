@@ -78,7 +78,7 @@ char	*gnl_read(char *remainder, int fd, ssize_t *ret)
 	char	*buf;
 	char	*new_rem;
 
-	buf = malloc(sizeof(char) *(BUFFER_SIZE + 1));
+	buf = malloc(sizeof(char) *((unsigned)BUFFER_SIZE + 1));
 	*ret = read(fd, buf, BUFFER_SIZE);
 	if (*ret < 0 || (remainder == NULL && *ret == 0))
 	{
