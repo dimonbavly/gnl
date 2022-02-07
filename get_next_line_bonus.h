@@ -15,7 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-# define ULIMIT_N 4096
+# define ULIMIT_N 10255
 
 char	*get_next_line(int fd);
 void	*gnl_memcpy(void *dest, const void *src, size_t n);

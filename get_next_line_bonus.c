@@ -26,7 +26,7 @@ char	*get_next_line(int fd)
 	ssize_t		ret;
 
 	result = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0  || fd > (ULIMIT_N - 1) || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
 		return (NULL);
 	while (1)
 	{
