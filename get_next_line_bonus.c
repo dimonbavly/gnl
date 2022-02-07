@@ -6,7 +6,7 @@
 /*   By: srupert <srupert@student.21-school.ru>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 19:33:32 by srupert           #+#    #+#             */
-/*   Updated: 2022/02/03 19:33:35 by srupert          ###   ########.fr       */
+/*   Updated: 2022/02/07 23:20:51 by srupert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*get_next_line(int fd)
 	ssize_t		ret;
 
 	result = NULL;
-	if (fd < 0  || fd > (ULIMIT_N - 1) || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
+	if (fd < 0 || fd > (ULIMIT_N - 1) || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	while (1)
 	{
